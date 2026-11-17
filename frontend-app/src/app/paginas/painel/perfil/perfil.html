@@ -1,0 +1,193 @@
+<header class="cabecalho-pagina">
+  <div>
+    <span class="cabecalho-pagina__sobretitulo">Conta</span>
+    <h1>Perfil</h1>
+    <p>Seus dados de acesso e do seu negócio.</p>
+  </div>
+</header>
+
+<!-- ===== Cartão de identificação ===== -->
+<section class="cartao identidade" aria-label="Sua conta">
+  <span class="identidade__avatar" aria-hidden="true">{{ inicial() }}</span>
+  <div class="identidade__textos">
+    <strong>{{ usuario()?.nome }}</strong>
+    <span>{{ usuario()?.nomeNegocio }}</span>
+    <span class="identidade__email">{{ usuario()?.email }}</span>
+  </div>
+  <button class="botao botao--secundario botao--compacto identidade__sair" type="button" (click)="autenticacao.sair()">
+    <app-icone nome="sair" />
+    Sair da conta
+  </button>
+</section>
+
+<div class="colunas">
+  <!-- ===== Dados da conta ===== -->
+  <section class="cartao" aria-labelledby="titulo-dados">
+    <div class="cartao__topo">
+      <span class="cartao__icone"><app-icone nome="usuario" /></span>
+      <div>
+        <h2 class="cartao__titulo" id="titulo-dados">Dados da conta</h2>
+        <p class="cartao__subtitulo">O e-mail é o que você usa para entrar</p>
+      </div>
+    </div>
+
+    <form [formGroup]="dados" (ngSubmit)="salvarDados()" novalidate>
+      <div class="campo">
+        <label for="perfil-nome">Seu nome</label>
+        <div class="entrada" [class.invalida]="invalidoDados('nome')">
+          <input
+            id="perfil-nome"
+            type="text"
+            formControlName="nome"
+            autocomplete="name"
+            maxlength="80"
+            [attr.aria-invalid]="invalidoDados('nome')"
+            aria-describedby="perfil-nome-erro"
+          />
+        </div>
+        @if (invalidoDados('nome')) {
+          <small class="erro-campo" id="perfil-nome-erro">{{ mensagem('nome') }}</small>
+        }
+      </div>
+
+      <div class="campo">
+        <label for="perfil-negocio">Nome do negócio</label>
+        <div class="entrada" [class.invalida]="invalidoDados('nomeNegocio')">
+          <input
+            id="perfil-negocio"
+            type="text"
+            formControlName="nomeNegocio"
+            autocomplete="organization"
+            maxlength="120"
+            [attr.aria-invalid]="invalidoDados('nomeNegocio')"
+            aria-describedby="perfil-negocio-erro"
+          />
+        </div>
+        @if (invalidoDados('nomeNegocio')) {
+          <small class="erro-campo" id="perfil-negocio-erro">{{ mensagem('nomeNegocio') }}</small>
+        }
+      </div>
+
+      <div class="campo">
+        <label for="perfil-email">E-mail</label>
+        <div class="entrada" [class.invalida]="invalidoDados('email')">
+          <app-icone nome="usuario" />
+          <input
+            id="perfil-email"
+            type="email"
+            formControlName="email"
+            autocomplete="email"
+            inputmode="email"
+            maxlength="160"
+            [attr.aria-invalid]="invalidoDados('email')"
+            aria-describedby="perfil-email-erro"
+          />
+        </div>
+        @if (invalidoDados('email')) {
+          <small class="erro-campo" id="perfil-email-erro">{{ mensagem('email') }}</small>
+        }
+      </div>
+
+      @if (erroDados()) {
+        <app-alerta>{{ erroDados() }}</app-alerta>
+      }
+      @if (sucessoDados()) {
+        <app-alerta tipo="sucesso">Dados atualizados com sucesso.</app-alerta>
+      }
+
+      <button class="botao botao--compacto" type="submit" [disabled]="salvandoDados() || dados.pristine">
+        @if (salvandoDados()) {
+          <span class="carregando" aria-hidden="true"></span>
+          Salvando...
+        } @else {
+          Salvar dados
+        }
+      </button>
+    </form>
+  </section>
+
+  <!-- ===== Alterar senha ===== -->
+  <section class="cartao" aria-labelledby="titulo-senha">
+    <div class="cartao__topo">
+      <span class="cartao__icone"><app-icone nome="cadeado" /></span>
+      <div>
+        <h2 class="cartao__titulo" id="titulo-senha">Alterar senha</h2>
+        <p class="cartao__subtitulo">Por segurança, confirme sua senha atual</p>
+      </div>
+    </div>
+
+    <form [formGroup]="senha" (ngSubmit)="salvarSenha()" novalidate>
+      <div class="campo">
+        <label for="perfil-senha-atual">Senha atual</label>
+        <div class="entrada" [class.invalida]="invalidoSenha('senhaAtual')">
+          <app-icone nome="cadeado" />
+          <input
+            id="perfil-senha-atual"
+            [type]="mostrarSenhas() ? 'text' : 'password'"
+            formControlName="senhaAtual"
+            autocomplete="current-password"
+            [attr.aria-invalid]="invalidoSenha('senhaAtual')"
+            aria-describedby="perfil-senha-atual-erro"
+          />
+          <app-botao-ver-senha [(visivel)]="mostrarSenhas" />
+        </div>
+        @if (invalidoSenha('senhaAtual')) {
+          <small class="erro-campo" id="perfil-senha-atual-erro">{{ mensagem('senhaAtual') }}</small>
+        }
+      </div>
+
+      <div class="campo">
+        <label for="perfil-nova-senha">Nova senha</label>
+        <div class="entrada" [class.invalida]="invalidoSenha('novaSenha')">
+          <app-icone nome="cadeado" />
+          <input
+            id="perfil-nova-senha"
+            [type]="mostrarSenhas() ? 'text' : 'password'"
+            formControlName="novaSenha"
+            autocomplete="new-password"
+            placeholder="Mínimo de 6 caracteres"
+            [attr.aria-invalid]="invalidoSenha('novaSenha')"
+            aria-describedby="perfil-nova-senha-erro"
+          />
+        </div>
+        @if (invalidoSenha('novaSenha')) {
+          <small class="erro-campo" id="perfil-nova-senha-erro">{{ mensagem('novaSenha') }}</small>
+        }
+      </div>
+
+      <div class="campo">
+        <label for="perfil-confirmacao">Repita a nova senha</label>
+        <div class="entrada" [class.invalida]="invalidoSenha('confirmacao')">
+          <app-icone nome="cadeado" />
+          <input
+            id="perfil-confirmacao"
+            [type]="mostrarSenhas() ? 'text' : 'password'"
+            formControlName="confirmacao"
+            autocomplete="new-password"
+            [attr.aria-invalid]="invalidoSenha('confirmacao')"
+            aria-describedby="perfil-confirmacao-erro"
+          />
+        </div>
+        @if (invalidoSenha('confirmacao')) {
+          <small class="erro-campo" id="perfil-confirmacao-erro">{{ mensagem('confirmacao') }}</small>
+        }
+      </div>
+
+      @if (erroSenha()) {
+        <app-alerta>{{ erroSenha() }}</app-alerta>
+      }
+      @if (sucessoSenha()) {
+        <app-alerta tipo="sucesso">Senha alterada. Use a nova senha no próximo login.</app-alerta>
+      }
+
+      <button class="botao botao--compacto" type="submit" [disabled]="salvandoSenha()">
+        @if (salvandoSenha()) {
+          <span class="carregando" aria-hidden="true"></span>
+          Alterando...
+        } @else {
+          Alterar senha
+        }
+      </button>
+    </form>
+  </section>
+</div>

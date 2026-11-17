@@ -1,0 +1,271 @@
+:host {
+  display: block;
+}
+
+/* ---------- Busca e filtros ---------- */
+.ferramentas {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 16px;
+  margin-bottom: 22px;
+}
+
+.busca {
+  flex: 1 1 280px;
+  max-width: 420px;
+  background: #fff;
+}
+
+.filtros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.filtro {
+  min-height: 38px;
+  padding: 0 14px;
+  border: 1px solid var(--borda);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--texto-2);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.filtro:hover {
+  border-color: #cfcde0;
+  color: var(--texto);
+}
+
+.filtro.ativo {
+  border-color: var(--roxo);
+  background: var(--roxo-suave);
+  color: var(--roxo-escuro);
+  font-weight: 600;
+}
+
+.filtro:focus-visible {
+  outline: 2px solid var(--roxo);
+  outline-offset: 2px;
+}
+
+/* ---------- Grade de cartões ---------- */
+.grade {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 18px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.produto {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--borda-suave);
+  border-radius: var(--raio-cartao);
+  background: var(--superficie);
+  box-shadow: var(--sombra-cartao);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.produto:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 1px 2px rgba(20, 18, 31, 0.04), 0 16px 32px -18px rgba(20, 18, 31, 0.24);
+}
+
+.produto__foto {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  background: var(--roxo-suave);
+}
+
+.produto__foto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.produto__sem-foto {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  color: #b9aaf9;
+}
+
+.produto__sem-foto app-icone {
+  width: 40px;
+  height: 40px;
+}
+
+.produto__selo {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  box-shadow: 0 2px 8px rgba(20, 18, 31, 0.12);
+}
+
+.produto__corpo {
+  flex: 1;
+  padding: 16px 16px 4px;
+}
+
+.produto__nome {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  overflow-wrap: anywhere;
+}
+
+.produto__descricao {
+  display: -webkit-box;
+  margin: 4px 0 0;
+  overflow: hidden;
+  color: var(--texto-2);
+  font-size: 12px;
+  line-height: 1.5;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.produto__dados {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 12px;
+  margin: 14px 0 0;
+}
+
+.produto__dados dt {
+  color: var(--texto-3);
+  font-size: 10.5px;
+  font-weight: 500;
+}
+
+.produto__dados dd {
+  margin: 2px 0 0;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.positivo {
+  color: var(--verde-texto);
+}
+
+.negativo {
+  color: var(--erro-texto);
+}
+
+/* ---------- Ações ---------- */
+.produto__acoes {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  padding: 12px 16px;
+  border-top: 1px solid var(--borda-suave);
+}
+
+.confirmar {
+  flex-basis: 100%;
+  color: var(--erro-texto);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.acao {
+  display: inline-flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 38px;
+  padding: 0 12px;
+  border: 1px solid var(--borda);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--texto);
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.acao:hover:not(:disabled) {
+  background: #f4f3f8;
+}
+
+.acao:focus-visible {
+  outline: 2px solid var(--roxo);
+  outline-offset: 2px;
+}
+
+.acao:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.acao app-icone {
+  width: 14px;
+  height: 14px;
+}
+
+.acao--perigo {
+  color: var(--erro-texto);
+}
+
+.acao--perigo:hover:not(:disabled) {
+  border-color: #f3c3c5;
+  background: var(--erro-fundo);
+}
+
+/* ---------- Celular ---------- */
+@media (max-width: 560px) {
+  .cabecalho-pagina .botao {
+    width: 100%;
+  }
+
+  .busca {
+    flex-basis: 100%;
+    max-width: none;
+  }
+
+  /* filtros rolam de lado em vez de quebrar em várias linhas */
+  .filtros {
+    flex-wrap: nowrap;
+    width: 100%;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .filtro {
+    flex-shrink: 0;
+    min-height: 40px;
+  }
+
+  .grade {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+  }
+
+  .acao {
+    min-height: 44px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .produto,
+  .produto:hover {
+    transition: none;
+    transform: none;
+  }
+}

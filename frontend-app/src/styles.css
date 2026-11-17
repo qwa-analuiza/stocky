@@ -1,0 +1,438 @@
+/* ================================================================
+   Identidade visual do Stockly
+   Cores, tipografia e peças de interface usadas em todas as telas.
+   ================================================================ */
+:root {
+  /* Marca */
+  --roxo: #7152f3;          /* botões, destaques, valor investido */
+  --roxo-escuro: #5f40e6;   /* hover do botão */
+  --roxo-claro: #8b6cf7;    /* textos de destaque no fundo escuro */
+  --roxo-suave: #efebfe;    /* fundos leves e foco dos campos */
+
+  --noite: #151026;         /* fundos escuros (painel da marca, menu) */
+  --noite-2: #1d1736;
+
+  /* Texto e linhas */
+  --texto: #14121f;
+  --texto-2: #6c6a7c;
+  --texto-3: #a4a2b2;
+  --borda: #e2e1ea;
+  --borda-suave: #eeedf3;
+
+  /* Superfícies */
+  --fundo-app: #f7f6fb;     /* fundo da área logada */
+  --superficie: #ffffff;    /* cartões */
+
+  /* Estados (sempre acompanhados de ícone + texto) */
+  --verde: #2bb673;         /* lucro / tudo certo */
+  --verde-texto: #1a7f4e;
+  --verde-fundo: #e7f7ef;
+  --amarelo: #f5a524;       /* atenção: vence em breve */
+  --amarelo-texto: #8f5b00;
+  --amarelo-fundo: #fff4e0;
+  --erro: #e5484d;          /* vencido / prejuízo / erro */
+  --erro-texto: #b4262c;
+  --erro-fundo: #fdeeee;
+
+  --raio: 10px;
+  --raio-cartao: 14px;
+  --sombra-cartao: 0 1px 2px rgba(20, 18, 31, 0.04), 0 10px 28px -16px rgba(20, 18, 31, 0.16);
+  --fonte: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  font-family: var(--fonte);
+  color: var(--texto);
+  background: #fff;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+a {
+  color: inherit;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ================================================================
+   Campos de formulário
+   ================================================================ */
+.campo {
+  margin-bottom: 22px;
+}
+
+.campo label,
+.campo .rotulo {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--texto);
+}
+
+.campo .opcional {
+  color: var(--texto-3);
+  font-weight: 500;
+}
+
+.entrada {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 47px;
+  padding: 0 14px;
+  border: 1px solid var(--borda);
+  border-radius: 8px;
+  background: #fff;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.entrada:hover {
+  border-color: #cfcde0;
+}
+
+.entrada:focus-within {
+  border-color: var(--roxo);
+  box-shadow: 0 0 0 3px var(--roxo-suave);
+}
+
+.entrada.invalida {
+  border-color: var(--erro);
+}
+
+.entrada.invalida:focus-within {
+  box-shadow: 0 0 0 3px var(--erro-fundo);
+}
+
+.entrada > svg,
+.entrada > app-icone {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  color: #9d9bab;
+}
+
+.entrada input,
+.entrada textarea {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--texto);
+  font-size: 12.5px;
+  font-weight: 500;
+}
+
+.entrada--texto-longo {
+  height: auto;
+  padding: 12px 14px;
+}
+
+.entrada--texto-longo textarea {
+  min-height: 84px;
+  resize: vertical;
+  line-height: 1.6;
+}
+
+.entrada input::placeholder,
+.entrada textarea::placeholder {
+  color: #8b8999;
+  font-weight: 400;
+}
+
+/* prefixo "R$" dentro do campo */
+.entrada .prefixo {
+  color: var(--texto-2);
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+/* remove o fundo amarelo/azul do preenchimento automático do navegador */
+.entrada input:-webkit-autofill {
+  -webkit-text-fill-color: var(--texto);
+  -webkit-box-shadow: 0 0 0 40px #fff inset;
+  transition: background-color 9999s;
+}
+
+.erro-campo {
+  display: block;
+  margin-top: 6px;
+  color: var(--erro);
+  font-size: 11px;
+}
+
+.dica-campo {
+  display: block;
+  margin-top: 6px;
+  color: var(--texto-3);
+  font-size: 11px;
+}
+
+/* ================================================================
+   Botões
+   ================================================================ */
+.botao {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: 49px;
+  padding: 0 22px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--roxo);
+  color: #fff;
+  font-size: 12.5px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  box-shadow: 0 12px 26px -8px rgba(113, 82, 243, 0.55);
+  transition: background 0.15s, transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+}
+
+.botao:hover:not(:disabled) {
+  background: var(--roxo-escuro);
+  transform: translateY(-1px);
+  box-shadow: 0 16px 30px -8px rgba(113, 82, 243, 0.6);
+}
+
+.botao:active:not(:disabled) {
+  transform: none;
+}
+
+.botao:focus-visible {
+  outline: 3px solid #c9bcfb;
+  outline-offset: 2px;
+}
+
+.botao:disabled {
+  opacity: 0.75;
+  cursor: wait;
+}
+
+.botao svg,
+.botao app-icone {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+}
+
+.botao--compacto {
+  height: 42px;
+  padding: 0 18px;
+}
+
+.botao--secundario {
+  background: #fff;
+  color: var(--texto);
+  border: 1px solid var(--borda);
+  box-shadow: none;
+}
+
+.botao--secundario:hover:not(:disabled) {
+  background: #f4f3f8;
+  border-color: #cfcde0;
+  box-shadow: none;
+}
+
+.botao--perigo {
+  background: var(--erro);
+  box-shadow: 0 10px 22px -10px rgba(229, 72, 77, 0.6);
+}
+
+.botao--perigo:hover:not(:disabled) {
+  background: #d23a3f;
+  box-shadow: 0 12px 24px -10px rgba(229, 72, 77, 0.65);
+}
+
+.carregando {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: girar 0.7s linear infinite;
+}
+
+.carregando--escuro {
+  border-color: var(--roxo-suave);
+  border-top-color: var(--roxo);
+}
+
+@keyframes girar {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ================================================================
+   Área logada: cartões e cabeçalho de página
+   ================================================================ */
+.cartao {
+  padding: 22px;
+  border: 1px solid var(--borda-suave);
+  border-radius: var(--raio-cartao);
+  background: var(--superficie);
+  box-shadow: var(--sombra-cartao);
+}
+
+.cartao__titulo {
+  margin: 0 0 4px;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.cartao__subtitulo {
+  margin: 0 0 18px;
+  color: var(--texto-2);
+  font-size: 12px;
+}
+
+.cabecalho-pagina {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px 24px;
+  margin-bottom: 28px;
+}
+
+.cabecalho-pagina__sobretitulo {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--roxo);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+
+.cabecalho-pagina h1 {
+  margin: 0;
+  font-size: clamp(24px, 3vw, 30px);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+  overflow-wrap: anywhere;
+}
+
+.cabecalho-pagina p {
+  margin: 6px 0 0;
+  color: var(--texto-2);
+  font-size: 13px;
+}
+
+/* mensagem de carregando / erro / vazio dentro de uma página */
+.aviso-pagina {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 48px 20px;
+  text-align: center;
+  color: var(--texto-2);
+  font-size: 13px;
+}
+
+.aviso-pagina h2 {
+  margin: 4px 0 0;
+  color: var(--texto);
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.aviso-pagina p {
+  max-width: 360px;
+  margin: 0 0 6px;
+  line-height: 1.6;
+}
+
+.aviso-pagina__icone {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background: var(--roxo-suave);
+  color: var(--roxo);
+}
+
+.aviso-pagina__icone app-icone {
+  width: 26px;
+  height: 26px;
+}
+
+/* ================================================================
+   Celular
+   ================================================================ */
+@media (max-width: 480px) {
+  .campo {
+    margin-bottom: 18px;
+  }
+
+  .campo label,
+  .campo .rotulo {
+    font-size: 12px;
+  }
+
+  .entrada {
+    height: 50px;
+  }
+
+  /* 16px evita o zoom automático do iPhone ao tocar no campo */
+  .entrada input,
+  .entrada textarea {
+    font-size: 16px;
+  }
+
+  .erro-campo,
+  .dica-campo {
+    font-size: 12px;
+  }
+
+  .botao {
+    height: 52px;
+    font-size: 14px;
+  }
+
+  .botao--compacto {
+    height: 46px;
+  }
+}

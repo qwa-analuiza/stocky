@@ -1,0 +1,208 @@
+:host {
+  display: block;
+}
+
+/* ---------- Números principais ---------- */
+.indicadores {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.texto-erro {
+  color: var(--erro-texto);
+  font-weight: 600;
+}
+
+/* ---------- Duas colunas ---------- */
+.colunas {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+
+.cartao__cabecalho {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.link-ver-todos {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  flex-shrink: 0;
+  padding: 4px 0;
+  color: var(--roxo);
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.link-ver-todos:hover {
+  text-decoration: underline;
+}
+
+.link-ver-todos app-icone {
+  width: 14px;
+  height: 14px;
+}
+
+/* ---------- Lista de vencimentos ---------- */
+.vencimentos {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.vencimentos li + li {
+  border-top: 1px solid var(--borda-suave);
+}
+
+.vencimento {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 -10px;
+  padding: 12px 10px;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+
+.vencimento:hover {
+  background: #f7f6fb;
+}
+
+.vencimento:focus-visible {
+  outline: 2px solid var(--roxo);
+}
+
+.vencimento__textos {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  gap: 2px;
+}
+
+.vencimento__textos strong {
+  overflow: hidden;
+  font-size: 13px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vencimento__textos span {
+  color: var(--texto-2);
+  font-size: 11.5px;
+}
+
+.tudo-certo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0 0;
+  padding: 14px;
+  border-radius: 10px;
+  background: var(--verde-fundo);
+  color: var(--verde-texto);
+  font-size: 12.5px;
+  font-weight: 500;
+}
+
+/* ---------- Investido x venda ---------- */
+.comparativo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 0 0 16px;
+}
+
+.comparativo dt {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--texto-2);
+  font-size: 11.5px;
+}
+
+.comparativo dd {
+  margin: 4px 0 0;
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  overflow-wrap: anywhere;
+}
+
+.marcador {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+}
+
+.marcador--investido {
+  background: var(--roxo);
+}
+
+.marcador--lucro {
+  background: var(--verde);
+}
+
+.marcador--prejuizo {
+  background: var(--erro);
+}
+
+.barra-grande {
+  --altura-barra: 16px;
+}
+
+.total-venda {
+  margin: 12px 0 20px;
+  color: var(--texto-2);
+  font-size: 12px;
+}
+
+.total-venda strong {
+  color: var(--texto);
+}
+
+.botao-largo {
+  width: 100%;
+}
+
+/* ================================================================
+   Responsivo
+   ================================================================ */
+@media (max-width: 1180px) {
+  .indicadores {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .colunas {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 560px) {
+  /* no celular o botão de novo produto ocupa a largura toda */
+  .cabecalho-pagina .botao {
+    width: 100%;
+  }
+
+  .indicadores {
+    gap: 12px;
+  }
+}
+
+@media (max-width: 400px) {
+  .indicadores {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

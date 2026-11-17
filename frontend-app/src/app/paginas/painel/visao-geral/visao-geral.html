@@ -1,0 +1,133 @@
+<header class="cabecalho-pagina">
+  <div>
+    <span class="cabecalho-pagina__sobretitulo">{{ usuario()?.nomeNegocio }}</span>
+    <h1>Olá, {{ primeiroNome() }}!</h1>
+    <p>Veja como está o seu estoque hoje.</p>
+  </div>
+  <a class="botao botao--compacto" routerLink="/painel/produtos/novo">
+    <app-icone nome="mais" />
+    Novo produto
+  </a>
+</header>
+
+@if (resumo.isLoading() && !resumo.hasValue()) {
+  <div class="aviso-pagina" aria-live="polite">
+    <span class="carregando carregando--escuro"></span>
+    Carregando seu estoque...
+  </div>
+} @else if (resumo.error()) {
+  <div class="cartao aviso-pagina" role="alert">
+    <span class="aviso-pagina__icone"><app-icone nome="alerta" /></span>
+    <h2>Não foi possível carregar o painel</h2>
+    <p>Verifique se o servidor está ligado e tente de novo.</p>
+    <button class="botao botao--secundario botao--compacto" type="button" (click)="resumo.reload()">Tentar de novo</button>
+  </div>
+} @else if (resumo.value(); as r) {
+  @if (r.totalProdutos === 0) {
+    <!-- ===== Primeiro acesso: estoque vazio ===== -->
+    <div class="cartao aviso-pagina">
+      <span class="aviso-pagina__icone"><app-icone nome="caixa" /></span>
+      <h2>Seu estoque está vazio</h2>
+      <p>Cadastre seus produtos para ver aqui quanto você tem, o que vai vencer e quanto pode faturar.</p>
+      <a class="botao botao--compacto" routerLink="/painel/produtos/novo">
+        <app-icone nome="mais" />
+        Cadastrar primeiro produto
+      </a>
+    </div>
+  } @else {
+    <!-- ===== Números principais ===== -->
+    <section class="indicadores" aria-label="Resumo do estoque">
+      <app-indicador rotulo="Produtos em estoque" icone="caixa" tom="roxo">
+        <span valor>{{ r.totalUnidades | number }} {{ r.totalUnidades === 1 ? 'unidade' : 'unidades' }}</span>
+        <span detalhe>{{ r.totalProdutos }} {{ r.totalProdutos === 1 ? 'produto cadastrado' : 'produtos cadastrados' }}</span>
+      </app-indicador>
+
+      <app-indicador
+        [rotulo]="'Vencem em ' + r.diasDeAlerta + ' dias'"
+        icone="relogio"
+        [tom]="r.produtosVencidos > 0 ? 'vermelho' : 'amarelo'"
+      >
+        <span valor>{{ r.produtosVencendo }} {{ r.produtosVencendo === 1 ? 'produto' : 'produtos' }}</span>
+        <span detalhe>
+          @if (r.produtosVencidos > 0) {
+            <strong class="texto-erro">{{ r.produtosVencidos }} já {{ r.produtosVencidos === 1 ? 'venceu' : 'venceram' }}</strong>
+          } @else {
+            Nenhum produto vencido
+          }
+        </span>
+      </app-indicador>
+
+      <app-indicador rotulo="Potencial de venda" icone="tendencia" tom="verde">
+        <span valor>{{ r.valorVenda | currency }}</span>
+        <span detalhe>se vender todo o estoque</span>
+      </app-indicador>
+
+      <app-indicador rotulo="Lucro potencial" icone="moeda" [tom]="r.lucroPotencial < 0 ? 'vermelho' : 'verde'">
+        <span valor>{{ r.lucroPotencial | currency }}</span>
+        <span detalhe>margem de {{ r.margemPercentual | number: '1.0-1' }}%</span>
+      </app-indicador>
+    </section>
+
+    <div class="colunas">
+      <!-- ===== Próximos vencimentos ===== -->
+      <section class="cartao" aria-labelledby="titulo-vencimentos">
+        <div class="cartao__cabecalho">
+          <div>
+            <h2 class="cartao__titulo" id="titulo-vencimentos">Produtos que vão vencer</h2>
+            <p class="cartao__subtitulo">Vencidos e com validade nos próximos {{ r.diasDeAlerta }} dias</p>
+          </div>
+          <a class="link-ver-todos" routerLink="/painel/produtos">
+            Ver todos <app-icone nome="seta-direita" />
+          </a>
+        </div>
+
+        @if (r.proximosVencimentos.length === 0) {
+          <p class="tudo-certo">
+            <app-icone nome="check" />
+            Nenhum produto vence nos próximos {{ r.diasDeAlerta }} dias.
+          </p>
+        } @else {
+          <ul class="vencimentos">
+            @for (produto of r.proximosVencimentos; track produto.id) {
+              <li>
+                <a class="vencimento" [routerLink]="['/painel/produtos', produto.id, 'editar']">
+                  <app-miniatura-produto [nome]="produto.nome" [imagem]="produto.imagem" />
+                  <span class="vencimento__textos">
+                    <strong>{{ produto.nome }}</strong>
+                    <span>{{ produto.quantidade }} un. · {{ produto.dataVencimento | date: 'dd/MM/yyyy' }}</span>
+                  </span>
+                  <app-selo-vencimento [dias]="produto.diasParaVencer" />
+                </a>
+              </li>
+            }
+          </ul>
+        }
+      </section>
+
+      <!-- ===== Investido x venda ===== -->
+      <section class="cartao" aria-labelledby="titulo-valor">
+        <h2 class="cartao__titulo" id="titulo-valor">Investido x venda</h2>
+        <p class="cartao__subtitulo">Quanto você colocou e quanto pode voltar</p>
+
+        <dl class="comparativo">
+          <div>
+            <dt><span class="marcador marcador--investido"></span>Investido</dt>
+            <dd>{{ r.valorInvestido | currency }}</dd>
+          </div>
+          <div>
+            <dt><span class="marcador" [class.marcador--lucro]="r.lucroPotencial >= 0" [class.marcador--prejuizo]="r.lucroPotencial < 0"></span>{{ r.lucroPotencial >= 0 ? 'Lucro' : 'Prejuízo' }}</dt>
+            <dd>{{ r.lucroPotencial | currency }}</dd>
+          </div>
+        </dl>
+
+        <app-barra-investido-venda class="barra-grande" [investido]="r.valorInvestido" [venda]="r.valorVenda" />
+
+        <p class="total-venda">Total em venda: <strong>{{ r.valorVenda | currency }}</strong></p>
+
+        <a class="botao botao--secundario botao--compacto botao-largo" routerLink="/painel/valor-estoque">
+          Ver valor de estoque por produto
+        </a>
+      </section>
+    </div>
+  }
+}

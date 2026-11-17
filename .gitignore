@@ -1,0 +1,31 @@
+# Back-end (Java / Maven)
+backend/target/
+*.class
+*.log
+
+# Front-end (Angular)
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+
+# IDEs e sistema
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db
+
+# Segredos
+.env
+
+# Angular
+frontend-app/node_modules/
+frontend-app/.angular/
+
+# Java / Maven
+backend/target/
+backend/.idea/
+
+# Segredos
+.env
+**/.env

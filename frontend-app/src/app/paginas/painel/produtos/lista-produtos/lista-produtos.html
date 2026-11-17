@@ -1,0 +1,148 @@
+<header class="cabecalho-pagina">
+  <div>
+    <span class="cabecalho-pagina__sobretitulo">Estoque</span>
+    <h1>Produtos</h1>
+    <p>
+      @if (produtos.hasValue()) {
+        {{ produtos.value().length }} {{ produtos.value().length === 1 ? 'produto cadastrado' : 'produtos cadastrados' }}
+      } @else {
+        Tudo o que você tem para vender
+      }
+    </p>
+  </div>
+  <a class="botao botao--compacto" routerLink="/painel/produtos/novo">
+    <app-icone nome="mais" />
+    Novo produto
+  </a>
+</header>
+
+@if (produtos.isLoading() && produtos.value().length === 0) {
+  <div class="aviso-pagina" aria-live="polite">
+    <span class="carregando carregando--escuro"></span>
+    Carregando produtos...
+  </div>
+} @else if (produtos.error()) {
+  <div class="cartao aviso-pagina" role="alert">
+    <span class="aviso-pagina__icone"><app-icone nome="alerta" /></span>
+    <h2>Não foi possível carregar os produtos</h2>
+    <p>Verifique se o servidor está ligado e tente de novo.</p>
+    <button class="botao botao--secundario botao--compacto" type="button" (click)="produtos.reload()">Tentar de novo</button>
+  </div>
+} @else if (produtos.value().length === 0) {
+  <div class="cartao aviso-pagina">
+    <span class="aviso-pagina__icone"><app-icone nome="caixa" /></span>
+    <h2>Nenhum produto ainda</h2>
+    <p>Cadastre o primeiro produto com foto, valores e validade.</p>
+    <a class="botao botao--compacto" routerLink="/painel/produtos/novo">
+      <app-icone nome="mais" />
+      Cadastrar produto
+    </a>
+  </div>
+} @else {
+  <!-- ===== Busca e filtros ===== -->
+  <div class="ferramentas">
+    <label class="entrada busca">
+      <app-icone nome="busca" />
+      <span class="sr-only">Buscar produto</span>
+      <input type="search" placeholder="Buscar por nome ou descrição" [value]="busca()" (input)="buscar($event)" />
+    </label>
+
+    <div class="filtros" role="group" aria-label="Filtrar por validade">
+      @for (opcao of filtros; track opcao.valor) {
+        <button
+          type="button"
+          class="filtro"
+          [class.ativo]="filtro() === opcao.valor"
+          [attr.aria-pressed]="filtro() === opcao.valor"
+          (click)="filtro.set(opcao.valor)"
+        >
+          {{ opcao.rotulo }}
+        </button>
+      }
+    </div>
+  </div>
+
+  @if (erro()) {
+    <app-alerta>{{ erro() }}</app-alerta>
+  }
+
+  @if (visiveis().length === 0) {
+    <div class="aviso-pagina">
+      <span class="aviso-pagina__icone"><app-icone nome="busca" /></span>
+      <h2>Nada encontrado</h2>
+      <p>Nenhum produto combina com a busca ou o filtro escolhido.</p>
+    </div>
+  } @else {
+    <!-- ===== Cartões de produto ===== -->
+    <ul class="grade">
+      @for (produto of visiveis(); track produto.id) {
+        <li class="produto">
+          <div class="produto__foto">
+            @if (produto.imagem) {
+              <img [src]="produto.imagem" [alt]="produto.nome" loading="lazy" />
+            } @else {
+              <span class="produto__sem-foto" aria-hidden="true">
+                <app-icone nome="imagem" />
+              </span>
+            }
+            <app-selo-vencimento class="produto__selo" [dias]="produto.diasParaVencer" />
+          </div>
+
+          <div class="produto__corpo">
+            <h2 class="produto__nome">{{ produto.nome }}</h2>
+            @if (produto.descricao) {
+              <p class="produto__descricao">{{ produto.descricao }}</p>
+            }
+
+            <dl class="produto__dados">
+              <div>
+                <dt>Em estoque</dt>
+                <dd>{{ produto.quantidade }} un.</dd>
+              </div>
+              <div>
+                <dt>Venda</dt>
+                <dd>{{ produto.valorVenda | currency }}</dd>
+              </div>
+              <div>
+                <dt>Investido</dt>
+                <dd>{{ produto.valorInvestido | currency }}</dd>
+              </div>
+              <div>
+                <dt>Lucro/un.</dt>
+                <dd [class.positivo]="lucroPorUnidade(produto) >= 0" [class.negativo]="lucroPorUnidade(produto) < 0">
+                  {{ lucroPorUnidade(produto) | currency }}
+                </dd>
+              </div>
+            </dl>
+          </div>
+
+          <div class="produto__acoes">
+            @if (confirmandoExclusao() === produto.id) {
+              <span class="confirmar">Excluir este produto?</span>
+              <button class="acao" type="button" (click)="confirmandoExclusao.set(null)" [disabled]="excluindo() === produto.id">
+                Cancelar
+              </button>
+              <button class="acao acao--perigo" type="button" (click)="excluir(produto)" [disabled]="excluindo() === produto.id">
+                {{ excluindo() === produto.id ? 'Excluindo...' : 'Excluir' }}
+              </button>
+            } @else {
+              <a class="acao" [routerLink]="[produto.id, 'editar']">
+                <app-icone nome="editar" />
+                Editar
+              </a>
+              <button
+                class="acao acao--perigo"
+                type="button"
+                (click)="confirmandoExclusao.set(produto.id)"
+                [attr.aria-label]="'Excluir ' + produto.nome"
+              >
+                <app-icone nome="lixeira" />
+                Excluir
+              </button>
+            }
+          </div>
+        </li>
+      }
+    </ul>
+  }
+}

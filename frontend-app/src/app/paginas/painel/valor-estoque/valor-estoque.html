@@ -1,0 +1,143 @@
+<header class="cabecalho-pagina">
+  <div>
+    <span class="cabecalho-pagina__sobretitulo">Financeiro</span>
+    <h1>Valor de estoque</h1>
+    <p>Compare quanto você investiu com quanto o estoque pode render na venda.</p>
+  </div>
+</header>
+
+@if (carregando()) {
+  <div class="aviso-pagina" aria-live="polite">
+    <span class="carregando carregando--escuro"></span>
+    Calculando o valor do estoque...
+  </div>
+} @else if (resumo.error() || produtos.error()) {
+  <div class="cartao aviso-pagina" role="alert">
+    <span class="aviso-pagina__icone"><app-icone nome="alerta" /></span>
+    <h2>Não foi possível calcular o valor do estoque</h2>
+    <p>Verifique se o servidor está ligado e tente de novo.</p>
+    <button class="botao botao--secundario botao--compacto" type="button" (click)="recarregar()">Tentar de novo</button>
+  </div>
+} @else if (resumo.value(); as r) {
+  @if (r.totalProdutos === 0) {
+    <div class="cartao aviso-pagina">
+      <span class="aviso-pagina__icone"><app-icone nome="moeda" /></span>
+      <h2>Ainda não há o que calcular</h2>
+      <p>Cadastre produtos com valor investido e valor de venda para ver o de-para aqui.</p>
+      <a class="botao botao--compacto" routerLink="/painel/produtos/novo">
+        <app-icone nome="mais" />
+        Cadastrar produto
+      </a>
+    </div>
+  } @else {
+    <!-- ===== Totais ===== -->
+    <section class="indicadores" aria-label="Totais do estoque">
+      <app-indicador rotulo="Total investido" icone="caixa" tom="roxo">
+        <span valor>{{ r.valorInvestido | currency }}</span>
+        <span detalhe>o que você gastou no estoque atual</span>
+      </app-indicador>
+
+      <app-indicador rotulo="Total em venda" icone="tendencia" tom="verde">
+        <span valor>{{ r.valorVenda | currency }}</span>
+        <span detalhe>se vender todas as unidades</span>
+      </app-indicador>
+
+      <app-indicador
+        [rotulo]="r.lucroPotencial >= 0 ? 'Lucro potencial' : 'Prejuízo potencial'"
+        icone="moeda"
+        [tom]="r.lucroPotencial >= 0 ? 'verde' : 'vermelho'"
+      >
+        <span valor>{{ r.lucroPotencial | currency }}</span>
+        <span detalhe>margem de {{ r.margemPercentual | number: '1.0-1' }}% sobre a venda</span>
+      </app-indicador>
+    </section>
+
+    <!-- ===== De-para geral ===== -->
+    <section class="cartao" aria-labelledby="titulo-geral">
+      <h2 class="cartao__titulo" id="titulo-geral">De-para do estoque</h2>
+      <p class="cartao__subtitulo">A barra inteira é o valor de venda. A parte roxa volta para cobrir o investimento; a verde é o seu lucro.</p>
+
+      <app-barra-investido-venda class="barra-geral" [investido]="r.valorInvestido" [venda]="r.valorVenda" />
+
+      <div class="legenda" aria-hidden="true">
+        <span><i class="marcador marcador--investido"></i>Investido · {{ r.valorInvestido | currency }}</span>
+        <span>
+          <i class="marcador" [class.marcador--lucro]="r.lucroPotencial >= 0" [class.marcador--prejuizo]="r.lucroPotencial < 0"></i>
+          {{ r.lucroPotencial >= 0 ? 'Lucro' : 'Prejuízo' }} · {{ r.lucroPotencial | currency }}
+        </span>
+      </div>
+    </section>
+
+    <!-- ===== Por produto ===== -->
+    <section class="cartao por-produto" aria-labelledby="titulo-produtos">
+      <div class="por-produto__topo">
+        <div>
+          <h2 class="cartao__titulo" id="titulo-produtos">Por produto</h2>
+          <p class="cartao__subtitulo">Do maior para o menor valor de venda. Todas as barras usam a mesma escala.</p>
+        </div>
+        <div class="legenda legenda--compacta">
+          <span><i class="marcador marcador--investido"></i>Investido</span>
+          <span><i class="marcador marcador--lucro"></i>Lucro</span>
+          <span><i class="marcador marcador--prejuizo"></i>Prejuízo</span>
+        </div>
+      </div>
+
+      <table class="tabela">
+        <thead>
+          <tr>
+            <th scope="col">Produto</th>
+            <th scope="col" class="numero">Investido</th>
+            <th scope="col" class="numero">Venda</th>
+            <th scope="col" class="numero">Lucro</th>
+            <th scope="col" class="numero">Margem</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (produto of ordenados(); track produto.id) {
+            <tr>
+              <th scope="row" class="tabela__produto">
+                <a [routerLink]="['/painel/produtos', produto.id, 'editar']" class="tabela__link">
+                  <app-miniatura-produto [nome]="produto.nome" [imagem]="produto.imagem" />
+                  <span class="tabela__nome">
+                    <strong>{{ produto.nome }}</strong>
+                    <span>{{ produto.quantidade }} un. · {{ produto.valorInvestido | currency }} → {{ produto.valorVenda | currency }}</span>
+                  </span>
+                </a>
+                <app-barra-investido-venda
+                  class="tabela__barra"
+                  [investido]="produto.valorInvestidoTotal"
+                  [venda]="produto.valorVendaTotal"
+                  [escala]="escala()"
+                />
+              </th>
+              <td class="numero" data-rotulo="Investido">{{ produto.valorInvestidoTotal | currency }}</td>
+              <td class="numero" data-rotulo="Venda">{{ produto.valorVendaTotal | currency }}</td>
+              <td
+                class="numero"
+                data-rotulo="Lucro"
+                [class.positivo]="produto.lucroTotal > 0"
+                [class.negativo]="produto.lucroTotal < 0"
+              >
+                {{ produto.lucroTotal | currency }}
+              </td>
+              <td class="numero" data-rotulo="Margem" [class.negativo]="margem(produto) < 0">
+                {{ margem(produto) | number: '1.0-1' }}%
+              </td>
+            </tr>
+          }
+        </tbody>
+        <tfoot>
+          <tr>
+            <th scope="row">Total</th>
+            <td class="numero" data-rotulo="Investido">{{ r.valorInvestido | currency }}</td>
+            <td class="numero" data-rotulo="Venda">{{ r.valorVenda | currency }}</td>
+            <td class="numero" data-rotulo="Lucro" [class.positivo]="r.lucroPotencial > 0" [class.negativo]="r.lucroPotencial < 0">
+              {{ r.lucroPotencial | currency }}
+            </td>
+            <td class="numero" data-rotulo="Margem">{{ r.margemPercentual | number: '1.0-1' }}%</td>
+          </tr>
+        </tfoot>
+      </table>
+    </section>
+  }
+}

@@ -1,0 +1,127 @@
+:host {
+  display: block;
+}
+
+/* ---------- Identificação ---------- */
+.identidade {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 20px;
+  background:
+    radial-gradient(120% 140% at 100% 0%, rgba(113, 82, 243, 0.1) 0%, rgba(113, 82, 243, 0) 60%),
+    var(--superficie);
+}
+
+.identidade__avatar {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #8a6cf8, #6a49f0);
+  box-shadow: 0 10px 24px -10px rgba(113, 82, 243, 0.7);
+  color: #fff;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.identidade__textos {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  gap: 2px;
+}
+
+.identidade__textos strong {
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  overflow-wrap: anywhere;
+}
+
+.identidade__textos span {
+  color: var(--texto-2);
+  font-size: 12.5px;
+  overflow-wrap: anywhere;
+}
+
+.identidade__email {
+  color: var(--texto-3) !important;
+}
+
+.identidade__sair {
+  flex-shrink: 0;
+  color: var(--erro-texto);
+}
+
+/* ---------- Formulários ---------- */
+.colunas {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  align-items: start;
+}
+
+.cartao__topo {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+.cartao__icone {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: var(--roxo-suave);
+  color: var(--roxo);
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+form .botao {
+  align-self: flex-start;
+}
+
+form .botao:disabled {
+  cursor: not-allowed;
+}
+
+/* ================================================================
+   Responsivo
+   ================================================================ */
+@media (max-width: 900px) {
+  .colunas {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 560px) {
+  .identidade {
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+
+  .identidade__avatar {
+    width: 52px;
+    height: 52px;
+    font-size: 20px;
+  }
+
+  .identidade__sair {
+    width: 100%;
+  }
+
+  form .botao {
+    align-self: stretch;
+  }
+}

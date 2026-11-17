@@ -1,0 +1,259 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.cabecalho-pagina {
+  margin-bottom: 8px;
+}
+
+.indicadores {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+/* ---------- De-para geral ---------- */
+.barra-geral {
+  --altura-barra: 22px;
+}
+
+.legenda {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  margin-top: 14px;
+  color: var(--texto-2);
+  font-size: 12px;
+}
+
+.legenda span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.legenda--compacta {
+  margin-top: 0;
+  font-size: 11.5px;
+}
+
+.marcador {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+}
+
+.marcador--investido {
+  background: var(--roxo);
+}
+
+.marcador--lucro {
+  background: var(--verde);
+}
+
+.marcador--prejuizo {
+  background: var(--erro);
+}
+
+/* ---------- Por produto ---------- */
+.por-produto__topo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px 24px;
+  margin-bottom: 8px;
+}
+
+.tabela {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+}
+
+.tabela thead th {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--borda);
+  color: var(--texto-3);
+  font-size: 11px;
+  font-weight: 600;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.tabela tbody tr + tr th,
+.tabela tbody tr + tr td {
+  border-top: 1px solid var(--borda-suave);
+}
+
+.tabela tbody th,
+.tabela tbody td {
+  padding: 14px 12px;
+  vertical-align: top;
+}
+
+.tabela tbody td {
+  padding-top: 18px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.tabela tfoot th,
+.tabela tfoot td {
+  padding: 14px 12px;
+  border-top: 2px solid var(--borda);
+  font-weight: 700;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.tabela .numero {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.tabela__produto {
+  width: 46%;
+  font-weight: 400;
+  text-align: left;
+}
+
+.tabela__link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+  text-decoration: none;
+}
+
+.tabela__link:hover strong {
+  color: var(--roxo);
+}
+
+.tabela__link app-miniatura-produto {
+  width: 38px;
+  height: 38px;
+  font-size: 14px;
+}
+
+.tabela__nome {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: 2px;
+}
+
+.tabela__nome strong {
+  overflow: hidden;
+  font-size: 13px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tabela__nome span {
+  color: var(--texto-2);
+  font-size: 11px;
+}
+
+.tabela__barra {
+  --altura-barra: 10px;
+}
+
+.positivo {
+  color: var(--verde-texto);
+}
+
+.negativo {
+  color: var(--erro-texto);
+}
+
+/* ================================================================
+   Responsivo
+   ================================================================ */
+@media (max-width: 1100px) {
+  .indicadores {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .indicadores app-indicador:last-child {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Celular e tablet pequeno: cada linha da tabela vira um cartão */
+@media (max-width: 760px) {
+  .tabela thead {
+    display: none;
+  }
+
+  .tabela,
+  .tabela tbody,
+  .tabela tfoot,
+  .tabela tr {
+    display: block;
+  }
+
+  .tabela tbody tr,
+  .tabela tfoot tr {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px 16px;
+    padding: 16px 0;
+  }
+
+  .tabela tbody tr + tr {
+    border-top: 1px solid var(--borda-suave);
+  }
+
+  .tabela tbody tr + tr th,
+  .tabela tbody tr + tr td {
+    border-top: 0;
+  }
+
+  .tabela tfoot tr {
+    margin-top: 4px;
+    padding: 16px;
+    border-radius: 12px;
+    background: var(--fundo-app);
+  }
+
+  .tabela tbody th,
+  .tabela tbody td,
+  .tabela tfoot th,
+  .tabela tfoot td {
+    width: auto;
+    padding: 0;
+    border: 0;
+    text-align: left;
+  }
+
+  .tabela__produto,
+  .tabela tfoot th {
+    grid-column: 1 / -1;
+  }
+
+  /* o nome da coluna aparece em cima de cada valor */
+  .tabela td::before {
+    content: attr(data-rotulo);
+    display: block;
+    margin-bottom: 2px;
+    color: var(--texto-3);
+    font-size: 10.5px;
+    font-weight: 500;
+  }
+
+  .tabela .numero {
+    text-align: left;
+  }
+}
+
+@media (max-width: 560px) {
+  .indicadores {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+}

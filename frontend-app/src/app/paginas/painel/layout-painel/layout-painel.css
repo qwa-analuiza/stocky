@@ -1,0 +1,304 @@
+/* ================================================================
+   Área logada
+   Computador: menu lateral escuro + conteúdo
+   Tablet/celular: barra do topo + abas fixas embaixo (cara de app)
+   ================================================================ */
+.painel {
+  display: grid;
+  grid-template-columns: 252px minmax(0, 1fr);
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--fundo-app);
+}
+
+/* ---------- Lateral ---------- */
+.lateral {
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  height: 100vh;
+  height: 100dvh;
+  padding: 28px 18px 20px;
+  background:
+    radial-gradient(140% 60% at 0% 100%, #2a1d5c 0%, rgba(42, 29, 92, 0) 60%),
+    var(--noite);
+  color: #fff;
+}
+
+.lateral__marca {
+  width: fit-content;
+  margin-left: 8px;
+  border-radius: 10px;
+  text-decoration: none;
+}
+
+.lateral__marca:focus-visible {
+  outline: 2px solid var(--roxo-claro);
+  outline-offset: 4px;
+}
+
+/* ---------- Menu ---------- */
+.menu {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.menu__item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 12px;
+  border-radius: 10px;
+  color: rgba(255, 255, 255, 0.64);
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s;
+}
+
+.menu__item:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+}
+
+.menu__item:focus-visible {
+  outline: 2px solid var(--roxo-claro);
+  outline-offset: 1px;
+}
+
+.menu__item.ativo {
+  background: rgba(113, 82, 243, 0.22);
+  color: #fff;
+}
+
+.menu__item.ativo::before {
+  content: '';
+  position: absolute;
+  left: -18px;
+  top: 10px;
+  bottom: 10px;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: var(--roxo-claro);
+}
+
+.menu__item app-icone {
+  width: 18px;
+  height: 18px;
+}
+
+/* ---------- Conta ---------- */
+.conta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: auto;
+  padding: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.conta__link {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  border-radius: 8px;
+  color: #fff;
+  text-decoration: none;
+}
+
+.conta__link:hover strong {
+  color: var(--roxo-claro);
+}
+
+.conta__link:focus-visible {
+  outline: 2px solid var(--roxo-claro);
+  outline-offset: 4px;
+}
+
+.conta__avatar {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #8a6cf8, #6a49f0);
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.conta__textos {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: 1px;
+}
+
+.conta__textos strong,
+.conta__textos span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.conta__textos strong {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.conta__textos span {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 11px;
+}
+
+.conta__sair {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  margin-left: auto;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.conta__sair:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.conta__sair:focus-visible {
+  outline: 2px solid var(--roxo-claro);
+}
+
+/* ---------- Conteúdo ---------- */
+.conteudo {
+  width: 100%;
+  max-width: 1200px;
+  min-width: 0;
+  margin: 0 auto;
+  padding: 40px clamp(20px, 3.5vw, 48px) 56px;
+}
+
+/* ================================================================
+   Tablet e celular
+   ================================================================ */
+@media (max-width: 1023px) {
+  .painel {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto 1fr;
+  }
+
+  /* lateral vira a barra do topo */
+  .lateral {
+    position: sticky;
+    z-index: 10;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    height: auto;
+    padding: 12px clamp(16px, 4vw, 32px);
+    background: var(--noite);
+  }
+
+  .lateral__marca {
+    margin-left: 0;
+  }
+
+  .conta {
+    margin: 0 0 0 auto;
+    padding: 0;
+    border: 0;
+    background: none;
+  }
+
+  .conta__avatar {
+    width: 32px;
+    height: 32px;
+    font-size: 13px;
+  }
+
+  /* menu vira as abas fixas embaixo */
+  .menu {
+    position: fixed;
+    z-index: 10;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    flex-direction: row;
+    gap: 0;
+    padding: 6px 8px calc(6px + env(safe-area-inset-bottom));
+    border-top: 1px solid var(--borda);
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 -8px 24px -16px rgba(20, 18, 31, 0.25);
+  }
+
+  .menu__item {
+    flex: 1;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+    min-height: 56px;
+    padding: 6px 2px;
+    color: var(--texto-2);
+    font-size: 11px;
+    line-height: 1.2;
+    text-align: center;
+  }
+
+  .menu__item:hover {
+    background: transparent;
+    color: var(--texto);
+  }
+
+  .menu__item.ativo {
+    background: transparent;
+    color: var(--roxo);
+    font-weight: 600;
+  }
+
+  .menu__item.ativo::before {
+    left: 30%;
+    right: 30%;
+    top: -6px;
+    bottom: auto;
+    width: auto;
+    height: 3px;
+    border-radius: 0 0 3px 3px;
+    background: var(--roxo);
+  }
+
+  .menu__item app-icone {
+    width: 21px;
+    height: 21px;
+  }
+
+  .conteudo {
+    padding: 28px clamp(16px, 4vw, 32px) calc(96px + env(safe-area-inset-bottom));
+  }
+}
+
+/* Telefones: só o avatar e o botão sair no topo */
+@media (max-width: 560px) {
+  .conta__textos {
+    display: none;
+  }
+
+  .conteudo {
+    padding-top: 22px;
+  }
+}

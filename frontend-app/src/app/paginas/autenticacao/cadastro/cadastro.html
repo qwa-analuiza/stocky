@@ -1,0 +1,112 @@
+<span class="sobretitulo">Comece agora</span>
+<h1>Crie sua conta grátis</h1>
+<p class="subtitulo">Organize seu estoque em poucos minutos.</p>
+
+<form [formGroup]="formulario" (ngSubmit)="criarConta()" novalidate>
+  <!-- Nome -->
+  <div class="campo">
+    <label for="cadastro-nome">Seu nome</label>
+    <div class="entrada" [class.invalida]="invalido('nome')">
+      <input
+        id="cadastro-nome"
+        type="text"
+        formControlName="nome"
+        placeholder="Como podemos chamar você?"
+        autocomplete="given-name"
+        [attr.aria-invalid]="invalido('nome')"
+        aria-describedby="cadastro-nome-erro"
+      />
+    </div>
+    @if (invalido('nome')) {
+      <small class="erro-campo" id="cadastro-nome-erro">{{ mensagem('nome') }}</small>
+    }
+  </div>
+
+  <!-- Nome do negócio -->
+  <div class="campo">
+    <label for="cadastro-negocio">Nome do negócio</label>
+    <div class="entrada" [class.invalida]="invalido('nomeNegocio')">
+      <input
+        id="cadastro-negocio"
+        type="text"
+        formControlName="nomeNegocio"
+        placeholder="Ex.: Loja da Marina"
+        autocomplete="organization"
+        [attr.aria-invalid]="invalido('nomeNegocio')"
+        aria-describedby="cadastro-negocio-erro"
+      />
+    </div>
+    @if (invalido('nomeNegocio')) {
+      <small class="erro-campo" id="cadastro-negocio-erro">{{ mensagem('nomeNegocio') }}</small>
+    }
+  </div>
+
+  <!-- E-mail -->
+  <div class="campo">
+    <label for="cadastro-email">E-mail</label>
+    <div class="entrada" [class.invalida]="invalido('email')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="3" y="5" width="18" height="14" rx="2" />
+        <path d="m3 7 9 6 9-6" />
+      </svg>
+      <input
+        id="cadastro-email"
+        type="email"
+        formControlName="email"
+        placeholder="marina@minhaloja.com"
+        autocomplete="email"
+        inputmode="email"
+        [attr.aria-invalid]="invalido('email')"
+        aria-describedby="cadastro-email-erro"
+      />
+    </div>
+    @if (invalido('email')) {
+      <small class="erro-campo" id="cadastro-email-erro">{{ mensagem('email') }}</small>
+    }
+  </div>
+
+  <!-- Senha -->
+  <div class="campo">
+    <label for="cadastro-senha">Senha</label>
+    <div class="entrada" [class.invalida]="invalido('senha')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="5" y="11" width="14" height="10" rx="2" />
+        <path d="M8 11V7a4 4 0 0 1 8 0v4" />
+      </svg>
+      <input
+        id="cadastro-senha"
+        [type]="mostrarSenha() ? 'text' : 'password'"
+        formControlName="senha"
+        placeholder="Mínimo de 6 caracteres"
+        autocomplete="new-password"
+        [attr.aria-invalid]="invalido('senha')"
+        aria-describedby="cadastro-senha-erro"
+      />
+      <app-botao-ver-senha [(visivel)]="mostrarSenha" />
+    </div>
+    @if (invalido('senha')) {
+      <small class="erro-campo" id="cadastro-senha-erro">{{ mensagem('senha') }}</small>
+    }
+  </div>
+
+  @if (erro()) {
+    <app-alerta>{{ erro() }}</app-alerta>
+  }
+
+  <button class="botao" type="submit" [disabled]="carregando()">
+    @if (carregando()) {
+      <span class="carregando" aria-hidden="true"></span>
+      Criando sua conta...
+    } @else {
+      Criar minha conta
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <polyline points="9 18 15 12 9 6" />
+      </svg>
+    }
+  </button>
+</form>
+
+<p class="alternar">
+  Já possui uma conta? <a routerLink="/login">Fazer login</a>
+</p>
+<p class="nota">Sua senha é guardada com criptografia e nunca fica visível para ninguém.</p>

@@ -1,0 +1,42 @@
+<div class="painel">
+  <!-- ===== Lateral (computador) / barra do topo (celular) ===== -->
+  <header class="lateral">
+    <a class="lateral__marca" routerLink="/painel" aria-label="Stockly — visão geral">
+      <app-marca compacta />
+    </a>
+
+    <!-- No celular este menu vira a barra de abas fixa embaixo da tela -->
+    <nav class="menu" aria-label="Menu principal">
+      @for (item of menu; track item.rota) {
+        <a
+          class="menu__item"
+          [routerLink]="item.rota"
+          routerLinkActive="ativo"
+          [routerLinkActiveOptions]="{ exact: item.exato }"
+          ariaCurrentWhenActive="page"
+        >
+          <app-icone [nome]="item.icone" />
+          <span>{{ item.rotulo }}</span>
+        </a>
+      }
+    </nav>
+
+    <div class="conta">
+      <a class="conta__link" routerLink="/painel/perfil" aria-label="Meu perfil">
+        <span class="conta__avatar" aria-hidden="true">{{ inicial() }}</span>
+        <span class="conta__textos">
+          <strong>{{ autenticacao.usuario()?.nomeNegocio }}</strong>
+          <span>{{ autenticacao.usuario()?.nome }}</span>
+        </span>
+      </a>
+      <button class="conta__sair" type="button" (click)="autenticacao.sair()" aria-label="Sair da conta" title="Sair">
+        <app-icone nome="sair" />
+      </button>
+    </div>
+  </header>
+
+  <!-- ===== Conteúdo da tela escolhida ===== -->
+  <main class="conteudo">
+    <router-outlet />
+  </main>
+</div>

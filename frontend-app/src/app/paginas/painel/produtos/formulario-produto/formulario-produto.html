@@ -1,0 +1,230 @@
+<a class="voltar" routerLink="/painel/produtos">
+  <app-icone nome="voltar" />
+  Voltar para produtos
+</a>
+
+<header class="cabecalho-pagina">
+  <div>
+    <span class="cabecalho-pagina__sobretitulo">Produtos</span>
+    <h1>{{ editando ? 'Editar produto' : 'Novo produto' }}</h1>
+    <p>Os valores são por unidade. O Stockly calcula os totais para você.</p>
+  </div>
+</header>
+
+@if (carregandoProduto()) {
+  <div class="aviso-pagina" aria-live="polite">
+    <span class="carregando carregando--escuro"></span>
+    Carregando produto...
+  </div>
+} @else {
+  <form class="formulario" [formGroup]="formulario" (ngSubmit)="salvar()" novalidate>
+    <!-- ===== Foto ===== -->
+    <section class="cartao foto" aria-labelledby="titulo-foto">
+      <h2 class="cartao__titulo" id="titulo-foto">Foto</h2>
+      <p class="cartao__subtitulo">Ajuda a achar o produto rapidinho</p>
+
+      <input
+        id="foto-produto"
+        class="sr-only"
+        type="file"
+        accept="image/png,image/jpeg,image/webp"
+        (change)="escolherImagem($event)"
+      />
+
+      @if (imagem()) {
+        <div class="foto__previa">
+          <img [src]="imagem()" alt="Foto do produto" />
+        </div>
+        <div class="foto__acoes">
+          <label class="botao botao--secundario botao--compacto" for="foto-produto">Trocar foto</label>
+          <button class="botao botao--secundario botao--compacto foto__remover" type="button" (click)="imagem.set(null)">
+            Remover
+          </button>
+        </div>
+      } @else {
+        <label class="foto__vazia" for="foto-produto">
+          @if (processandoImagem()) {
+            <span class="carregando carregando--escuro"></span>
+            Preparando a foto...
+          } @else {
+            <span class="foto__icone"><app-icone nome="imagem" /></span>
+            <strong>Adicionar foto</strong>
+            <span>JPG, PNG ou WebP · até 10 MB</span>
+          }
+        </label>
+      }
+
+      @if (erroImagem()) {
+        <small class="erro-campo" role="alert">{{ erroImagem() }}</small>
+      }
+    </section>
+
+    <div class="colunas">
+      <!-- ===== Informações ===== -->
+      <section class="cartao" aria-labelledby="titulo-info">
+        <h2 class="cartao__titulo" id="titulo-info">Informações</h2>
+        <p class="cartao__subtitulo">Como o produto aparece no seu estoque</p>
+
+        <div class="campo">
+          <label for="produto-nome">Nome</label>
+          <div class="entrada" [class.invalida]="invalido('nome')">
+            <input
+              id="produto-nome"
+              type="text"
+              formControlName="nome"
+              placeholder="Ex.: Sabonete de lavanda"
+              maxlength="120"
+              [attr.aria-invalid]="invalido('nome')"
+              aria-describedby="produto-nome-erro"
+            />
+          </div>
+          @if (invalido('nome')) {
+            <small class="erro-campo" id="produto-nome-erro">{{ mensagem('nome') }}</small>
+          }
+        </div>
+
+        <div class="campo">
+          <label for="produto-descricao">Descrição <span class="opcional">(opcional)</span></label>
+          <div class="entrada entrada--texto-longo" [class.invalida]="invalido('descricao')">
+            <textarea
+              id="produto-descricao"
+              formControlName="descricao"
+              placeholder="Tamanho, cor, fornecedor..."
+              maxlength="500"
+              rows="3"
+              aria-describedby="produto-descricao-contador"
+            ></textarea>
+          </div>
+          <small class="dica-campo contador" id="produto-descricao-contador">{{ tamanhoDescricao() }}/500</small>
+        </div>
+
+        <div class="linha">
+          <div class="campo">
+            <label for="produto-quantidade">Quantidade em estoque</label>
+            <div class="entrada" [class.invalida]="invalido('quantidade')">
+              <input
+                id="produto-quantidade"
+                type="number"
+                inputmode="numeric"
+                min="0"
+                step="1"
+                formControlName="quantidade"
+                placeholder="0"
+                [attr.aria-invalid]="invalido('quantidade')"
+                aria-describedby="produto-quantidade-erro"
+              />
+              <span class="prefixo">un.</span>
+            </div>
+            @if (invalido('quantidade')) {
+              <small class="erro-campo" id="produto-quantidade-erro">{{ mensagem('quantidade') }}</small>
+            }
+          </div>
+
+          <div class="campo">
+            <label for="produto-vencimento">Data de vencimento <span class="opcional">(opcional)</span></label>
+            <div class="entrada">
+              <input id="produto-vencimento" type="date" formControlName="dataVencimento" aria-describedby="produto-vencimento-dica" />
+            </div>
+            <small class="dica-campo" id="produto-vencimento-dica">Deixe em branco se o produto não vence</small>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== Valores ===== -->
+      <section class="cartao" aria-labelledby="titulo-valores">
+        <h2 class="cartao__titulo" id="titulo-valores">Valores por unidade</h2>
+        <p class="cartao__subtitulo">Quanto custou e por quanto você vende cada um</p>
+
+        <div class="linha">
+          <div class="campo">
+            <label for="produto-investido">Valor investido</label>
+            <div class="entrada" [class.invalida]="invalido('valorInvestido')">
+              <span class="prefixo">R$</span>
+              <input
+                id="produto-investido"
+                type="number"
+                inputmode="decimal"
+                min="0"
+                step="0.01"
+                formControlName="valorInvestido"
+                placeholder="0,00"
+                [attr.aria-invalid]="invalido('valorInvestido')"
+                aria-describedby="produto-investido-erro"
+              />
+            </div>
+            @if (invalido('valorInvestido')) {
+              <small class="erro-campo" id="produto-investido-erro">{{ mensagem('valorInvestido') }}</small>
+            }
+          </div>
+
+          <div class="campo">
+            <label for="produto-venda">Valor de venda</label>
+            <div class="entrada" [class.invalida]="invalido('valorVenda')">
+              <span class="prefixo">R$</span>
+              <input
+                id="produto-venda"
+                type="number"
+                inputmode="decimal"
+                min="0"
+                step="0.01"
+                formControlName="valorVenda"
+                placeholder="0,00"
+                [attr.aria-invalid]="invalido('valorVenda')"
+                aria-describedby="produto-venda-erro"
+              />
+            </div>
+            @if (invalido('valorVenda')) {
+              <small class="erro-campo" id="produto-venda-erro">{{ mensagem('valorVenda') }}</small>
+            }
+          </div>
+        </div>
+
+        <!-- contas automáticas -->
+        <dl class="resumo" aria-live="polite">
+          <div>
+            <dt>Lucro por unidade</dt>
+            <dd [class.positivo]="calculo().lucroPorUnidade > 0" [class.negativo]="calculo().lucroPorUnidade < 0">
+              {{ calculo().lucroPorUnidade | currency }}
+            </dd>
+          </div>
+          <div>
+            <dt>Margem</dt>
+            <dd [class.negativo]="calculo().margem < 0">{{ calculo().margem | number: '1.0-1' }}%</dd>
+          </div>
+          <div>
+            <dt>Total investido</dt>
+            <dd>{{ calculo().totalInvestido | currency }}</dd>
+          </div>
+          <div>
+            <dt>Total em venda</dt>
+            <dd>{{ calculo().totalVenda | currency }}</dd>
+          </div>
+        </dl>
+        @if (calculo().preenchido && calculo().lucroPorUnidade < 0) {
+          <p class="aviso-prejuizo">
+            <app-icone nome="alerta" />
+            O valor de venda está abaixo do que você investiu.
+          </p>
+        }
+      </section>
+    </div>
+
+    @if (erro()) {
+      <app-alerta class="erro-geral">{{ erro() }}</app-alerta>
+    }
+
+    <!-- ===== Ações ===== -->
+    <div class="acoes">
+      <a class="botao botao--secundario" routerLink="/painel/produtos">Cancelar</a>
+      <button class="botao" type="submit" [disabled]="salvando() || processandoImagem()">
+        @if (salvando()) {
+          <span class="carregando" aria-hidden="true"></span>
+          Salvando...
+        } @else {
+          <app-icone nome="check" />
+          {{ editando ? 'Salvar alterações' : 'Cadastrar produto' }}
+        }
+      </button>
+    </div>
+  </form>
+}
