@@ -21,6 +21,7 @@ Thumbs.db
 # Angular
 frontend-app/node_modules/
 frontend-app/.angular/
+frontend-app/dist/
 
 # Java / Maven
 backend/target/

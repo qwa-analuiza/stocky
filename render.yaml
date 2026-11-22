@@ -1,0 +1,18 @@
+# Blueprint do Render: New > Blueprint > escolha este repositório.
+services:
+  - type: web
+    name: stockly-api
+    runtime: docker
+    rootDir: backend
+    plan: free
+    envVars:
+      - key: DB_URL
+        sync: false   # ex.: jdbc:mysql://HOST:PORTA/stockly?sslMode=REQUIRED&serverTimezone=UTC
+      - key: DB_USER
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: CORS_ORIGENS
+        value: https://stockly.vercel.app

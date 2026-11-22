@@ -1,5 +1,5 @@
-// Endereço da API (back-end Spring Boot).
-// Quando publicar o back (ex.: Render), troque pelo endereço de produção.
+// Endereço da API em produção (back-end no Render).
+// Usado pelo "ng build". Se a URL do Render for outra, troque aqui.
 export const environment = {
-  apiUrl: 'http://localhost:8080/api',
+  apiUrl: 'https://stockly-api.onrender.com/api',
 };
